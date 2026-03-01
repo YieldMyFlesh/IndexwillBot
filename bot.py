@@ -89,11 +89,11 @@ def get_next_prescription():
 async def send_will():
     global waiting_for_execution
     prescription = get_next_prescription()
-    text = f"**/_ПРЕДПИСАНИЕ ПОЛУЧЕНО./_**\n\n{prescription}"
+    text = f"_ПРЕДПИСАНИЕ ПОЛУЧЕНО._\n\n{prescription}"
     
     try:
         photo = FSInputFile(IMAGE_PATH)
-        await bot.send_photo(chat_id=CHANNEL_ID, photo=photo, caption=text, parse_mode="Markdown")
+        await bot.send_photo(chat_id=CHANNEL_ID, photo=photo, caption=text)
         waiting_for_execution = True
     except Exception as e:
         print(f"Error: {e}")
@@ -104,7 +104,7 @@ async def check_execution(post: types.Message):
     
     if waiting_for_execution:
         waiting_for_execution = False
-        await post.reply("_ВЫПОЛНЕНО._")
+        await post.reply("_ПОДТВЕРЖДЕНО._")
         
         await asyncio.sleep(4 * 3600)
         await send_will()
