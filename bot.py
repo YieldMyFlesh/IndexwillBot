@@ -2,6 +2,7 @@ import asyncio
 import random
 import os
 from aiogram import Bot, Dispatcher, types, F
+from aiogram.types import FSInputFile
 
 API_TOKEN = os.getenv('BOT_TOKEN')
 CHANNEL_ID = int(os.getenv('CHANNEL_ID'))
@@ -25,8 +26,8 @@ async def send_will():
     text = f"📜 **Предписание Указательного:**\n\n{random.choice(PRESCRIPTIONS)}"
     
     try:
-        with open(IMAGE_PATH, 'rb') as photo:
-            await bot.send_photo(chat_id=CHANNEL_ID, photo=photo, caption=text, parse_mode="Markdown")
+        photo = FSInputFile(IMAGE_PATH)
+        await bot.send_photo(chat_id=CHANNEL_ID, photo=photo, caption=text, parse_mode="Markdown")
         waiting_for_execution = True
     except Exception as e:
         print(f"Error: {e}")
@@ -46,6 +47,7 @@ async def main():
     if not API_TOKEN or not CHANNEL_ID:
         return
     
+    await bot.delete_webhook(drop_pending_updates=True)
     asyncio.create_task(send_will())
     await dp.start_polling(bot)
 
