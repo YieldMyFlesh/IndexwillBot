@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher, types, F
 
 API_TOKEN = os.getenv('BOT_TOKEN')
 CHANNEL_ID = int(os.getenv('CHANNEL_ID'))
-IMAGE_PATH = 'proxy_will.jpg'
+IMAGE_PATH = 'proxy_will.png'
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
