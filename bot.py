@@ -1,10 +1,10 @@
 import asyncio
 import random
-import os  
+import os
 from aiogram import Bot, Dispatcher, types, F
 
 API_TOKEN = os.getenv('BOT_TOKEN')
-CHANNEL_ID = -100XXXXXXXXXX  
+CHANNEL_ID = int(os.getenv('CHANNEL_ID'))
 IMAGE_PATH = 'proxy_will.jpg'
 
 bot = Bot(token=API_TOKEN)
@@ -29,7 +29,7 @@ async def send_will():
             await bot.send_photo(chat_id=CHANNEL_ID, photo=photo, caption=text, parse_mode="Markdown")
         waiting_for_execution = True
     except Exception as e:
-        print(f"Воля предписаний отвергла вас: {e}")
+        print(f"Error: {e}")
 
 @dp.channel_post(F.text.lower() == "executed")
 async def check_execution(post: types.Message):
@@ -37,15 +37,15 @@ async def check_execution(post: types.Message):
     
     if waiting_for_execution:
         waiting_for_execution = False
-        await post.reply("Предписание выполнено. Воля города удовлетворена.")
+        await post.reply("Предписание выполнено. Воля города удовлетворена")
         
         await asyncio.sleep(4 * 3600)
         await send_will()
 
 async def main():
-    if not API_TOKEN:
-        print("Insgj-AAeb./hhhGfSsE")
+    if not API_TOKEN or not CHANNEL_ID:
         return
+    
     asyncio.create_task(send_will())
     await dp.start_polling(bot)
 
