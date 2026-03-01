@@ -89,7 +89,7 @@ def get_next_prescription():
 async def send_will():
     global waiting_for_execution
     prescription = get_next_prescription()
-    text = f"**_ПРЕДПИСАНИЕ ПОЛУЧЕНО._**\n\n{prescription}"
+    text = f"**/_ПРЕДПИСАНИЕ ПОЛУЧЕНО./_**\n\n{prescription}"
     
     try:
         photo = FSInputFile(IMAGE_PATH)
