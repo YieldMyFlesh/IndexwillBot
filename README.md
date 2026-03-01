@@ -1,2 +1,0 @@
-# IndexwillBot
-Index will bot
