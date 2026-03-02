@@ -61,15 +61,6 @@ BASE_PRESCRIPTIONS = list(set([
     "Оставить сухую ветку на крышке мусорного бака.",
     "Провести пальцем по любой металлической ограде.",
     "Запомнить три цифры номера первой проехавшей машины.",
-    "Остановиться на углу здания и обернуться назад.",
-    "Запомнить цвет одежды первого встречного человека.",
-    "Коснуться косяка двери перед тем, как выйти из комнаты.",
-    "Оставить на скамейке нераспечатанную пачку салфеток.",
-    "Пройти через два разных двора, прежде чем прийти в пункт назначения.",
-    "Посмотреть на облако, пока оно не разделится или не сменит форму.",
-    "Пересчитать количество пуговиц на своей одежде.",
-    "Найти глазами предмет ярко-желтого цвета и зафиксировать взгляд на минуту.",
-    "Коснуться холодного металла ключей в кармане.",
     "Остановиться у витрины книжного магазина на минуту.",
     "Сделать пять шагов по прямой линии, как по канату.",
     "Посмотреть на уличные часы и дождаться смены минуты.",
@@ -102,7 +93,7 @@ async def wait_until_morning():
 async def send_will():
     global waiting_for_execution
     await wait_until_morning()
-    text = f"_ПРЕДПИСАНИЕ ПОЛУЧЕНО._\n\n{get_next(base_queue, BASE_PRESCRIPTIONS)}"
+    text = f"\_ПРЕДПИСАНИЕ ПОЛУЧЕНО.\_\n\n{get_next(base_queue, BASE_PRESCRIPTIONS)}"
     try:
         if STICKER_ID: 
             await bot.send_sticker(chat_id=CHANNEL_ID, sticker=STICKER_ID)
@@ -113,7 +104,7 @@ async def send_will():
 @dp.channel_post(F.text.lower().contains("март"))
 async def march_trigger(post: types.Message):
     idx = post.text.lower().find("март")
-    text = f"_ПРЕДПИСАНИЕ ПОЛУЧЕНО._\n\n{get_next(simple_queue, SIMPLE_PRESCRIPTIONS)}"
+    text = f"\_ПРЕДПИСАНИЕ ПОЛУЧЕНО.\_\n\n{get_next(simple_queue, SIMPLE_PRESCRIPTIONS)}"
     try:
         params = ReplyParameters(message_id=post.message_id, quote=post.text[idx:idx+4])
         if STICKER_ID: 
@@ -126,7 +117,7 @@ async def check_execution(post: types.Message):
     global waiting_for_execution
     if waiting_for_execution:
         waiting_for_execution = False
-        await post.reply("_ПОДТВЕРЖДЕНО._", parse_mode="Markdown")
+        await post.reply("\_ПОДТВЕРЖДЕНО.\_", parse_mode="Markdown")
         await asyncio.sleep(4 * 3600)
         await send_will()
 
