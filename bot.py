@@ -130,7 +130,7 @@ BASE_PRESCRIPTIONS = list(set([
 
 SIMPLE_PRESCRIPTIONS = list(set([
     "Пописяй.", "Покакай.", "Моргни.", "Топни ногой.", "Посмотри влево.",
-    "Почеши нос.", "Зевни.", "Скажи 'Ой'.", "Хлопни в ладоши.", "Подними палец вверх.",
+    "Почеши нос.", "Зевни.", "Скажи 'Ой'.", "Хлопни в лодоши.", "Подними палец вверх.",
     "Улыбнись.", "Расскажи ближайшему человеку любую шутку.", "Напиши первому, кого вспомнишь."
 ]))
 
@@ -155,7 +155,7 @@ async def wait_until_morning():
 async def send_will():
     global waiting_for_execution
     await wait_until_morning()
-    text = fr"\_ПРЕДПИСАНИЕ ПОЛУЧЕНО.\_\n\n{get_next(base_queue, BASE_PRESCRIPTIONS)}"
+    text = f"\\_ПРЕДПИСАНИЕ ПОЛУЧЕНО.\\_\n\n{get_next(base_queue, BASE_PRESCRIPTIONS)}"
     try:
         if STICKER_ID: 
             await bot.send_sticker(chat_id=CHANNEL_ID, sticker=STICKER_ID)
@@ -166,7 +166,7 @@ async def send_will():
 @dp.channel_post(F.text.lower().contains("март"))
 async def march_trigger(post: types.Message):
     idx = post.text.lower().find("март")
-    text = fr"\_ПРЕДПИСАНИЕ ПОЛУЧЕНО.\_\n\n{get_next(simple_queue, SIMPLE_PRESCRIPTIONS)}"
+    text = f"\\_ПРЕДПИСАНИЕ ПОЛУЧЕНО.\\_\n\n{get_next(simple_queue, SIMPLE_PRESCRIPTIONS)}"
     try:
         params = ReplyParameters(message_id=post.message_id, quote=post.text[idx:idx+4])
         if STICKER_ID: 
@@ -179,7 +179,7 @@ async def check_execution(post: types.Message):
     global waiting_for_execution
     if waiting_for_execution:
         waiting_for_execution = False
-        await post.reply(r"\_ПОДТВЕРЖДЕНО.\_", parse_mode="Markdown")
+        await post.reply(f"\\_ПОДТВЕРЖДЕНО.\\_", parse_mode="Markdown")
         await asyncio.sleep(2 * 3600)
         await send_will()
 
@@ -190,4 +190,3 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
-    
