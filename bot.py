@@ -1,7 +1,7 @@
 import asyncio
 import random
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.types import ReplyParameters
@@ -81,8 +81,7 @@ SIMPLE_PRESCRIPTIONS = list(set([
     "Почеши нос.", "Зевни.", "Скажи 'Ой'.", "Хлопни в ладоши.", "Подними палец вверх."
 ]))
 
-base_queue = []
-simple_queue = []
+base_queue, simple_queue = [], []
 waiting_for_execution = False
 
 def get_next(queue, source):
@@ -97,7 +96,7 @@ async def wait_until_morning():
         now = datetime.now(kiev_tz)
         if 8 <= now.hour < 20: break
         target = now.replace(hour=8, minute=0, second=0, microsecond=0)
-        if now.hour >= 20: target = target.replace(day=now.day + 1)
+        if now.hour >= 20: target += timedelta(days=1)
         await asyncio.sleep(min((target - now).total_seconds(), 3600))
 
 async def send_will():
@@ -105,8 +104,9 @@ async def send_will():
     await wait_until_morning()
     text = f"_ПРЕДПИСАНИЕ ПОЛУЧЕНО._\n\n{get_next(base_queue, BASE_PRESCRIPTIONS)}"
     try:
-        if STICKER_ID: await bot.send_sticker(CHANNEL_ID, STICKER_ID)
-        await bot.send_message(CHANNEL_ID, text, parse_mode="Markdown")
+        if STICKER_ID: 
+            await bot.send_sticker(chat_id=CHANNEL_ID, sticker=STICKER_ID)
+        await bot.send_message(chat_id=CHANNEL_ID, text=text, parse_mode="Markdown")
         waiting_for_execution = True
     except Exception as e: print(f"Error: {e}")
 
@@ -116,8 +116,9 @@ async def march_trigger(post: types.Message):
     text = f"_ПРЕДПИСАНИЕ ПОЛУЧЕНО._\n\n{get_next(simple_queue, SIMPLE_PRESCRIPTIONS)}"
     try:
         params = ReplyParameters(message_id=post.message_id, quote=post.text[idx:idx+4])
-        if STICKER_ID: await bot.send_sticker(CHANNEL_ID, STICKER_ID, reply_parameters=params)
-        await bot.send_message(CHANNEL_ID, text, parse_mode="Markdown")
+        if STICKER_ID: 
+            await bot.send_sticker(chat_id=CHANNEL_ID, sticker=STICKER_ID, reply_parameters=params)
+        await bot.send_message(chat_id=CHANNEL_ID, text=text, parse_mode="Markdown")
     except Exception as e: print(f"Error: {e}")
 
 @dp.channel_post(F.text.lower() == "исполнено")
