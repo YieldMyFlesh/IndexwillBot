@@ -113,7 +113,19 @@ BASE_PRESCRIPTIONS = list(set([
     "Найти и сфотографировать три разных изображения птиц на улицах.",
     "Выйти на улицу с одной деталью одежды наизнанку.",
     "Пересечь сложный перекресток по периметру, коснувшись каждого угла.",
-    "Дождаться в тупиковом переулке выхода человека в головном уборе."
+    "Дождаться в тупиковом переулке выхода человека в головном уборе.",
+    "Найти самое старое дерево в радиусе километра и оставить в его корнях запечатанный конверт.",
+    "Доехать до конечной незнакомого маршрута и вернуться пешком без карт.",
+    "Просидеть в холле отеля 15 минут, наблюдая за людьми в полной тишине.",
+    "Пройти от одного до другого одинаковых объектов в городе прямой линией.",
+    "Стоять в круге света фонаря, пока мимо не пройдут три человека.",
+    "Найти место с эхом и произнести там дату своего рождения.",
+    "Оставить пачку соли или сахара на пороге заброшенного здания.",
+    "Постоять две минуты на стыке трех разных дорожных покрытий.",
+    "Найти здание в процессе реконструкции, обойти его и оставить на ограждении серую нить.",
+    "Доехать до остановки с названием длиннее 10 букв и дойти оттуда до ближайшей высокой трубы.",
+    "Найти заброшенную детскую площадку, провести там 10 минут и коснуться каждого металла.",
+    "Найти точку схождения трех почтовых индексов и пройти вдоль этой линии один километр."
 ]))
 
 SIMPLE_PRESCRIPTIONS = list(set([
@@ -143,7 +155,7 @@ async def wait_until_morning():
 async def send_will():
     global waiting_for_execution
     await wait_until_morning()
-    text = f"\_ПРЕДПИСАНИЕ ПОЛУЧЕНО.\_\n\n{get_next(base_queue, BASE_PRESCRIPTIONS)}"
+    text = fr"\_ПРЕДПИСАНИЕ ПОЛУЧЕНО.\_\n\n{get_next(base_queue, BASE_PRESCRIPTIONS)}"
     try:
         if STICKER_ID: 
             await bot.send_sticker(chat_id=CHANNEL_ID, sticker=STICKER_ID)
@@ -154,7 +166,7 @@ async def send_will():
 @dp.channel_post(F.text.lower().contains("март"))
 async def march_trigger(post: types.Message):
     idx = post.text.lower().find("март")
-    text = f"\_ПРЕДПИСАНИЕ ПОЛУЧЕНО.\_\n\n{get_next(simple_queue, SIMPLE_PRESCRIPTIONS)}"
+    text = fr"\_ПРЕДПИСАНИЕ ПОЛУЧЕНО.\_\n\n{get_next(simple_queue, SIMPLE_PRESCRIPTIONS)}"
     try:
         params = ReplyParameters(message_id=post.message_id, quote=post.text[idx:idx+4])
         if STICKER_ID: 
@@ -167,7 +179,7 @@ async def check_execution(post: types.Message):
     global waiting_for_execution
     if waiting_for_execution:
         waiting_for_execution = False
-        await post.reply("\_ПОДТВЕРЖДЕНО.\_", parse_mode="Markdown")
+        await post.reply(r"\_ПОДТВЕРЖДЕНО.\_", parse_mode="Markdown")
         await asyncio.sleep(2 * 3600)
         await send_will()
 
@@ -178,3 +190,4 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
+    
